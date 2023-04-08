@@ -4,7 +4,7 @@ const express =  require('express');
 const mongoose = require('mongoose')
 const app = express()
 
-const Person = require('./models/Person')
+
 
 //forma de ler JSON / middlewares
 app.use(
@@ -16,38 +16,10 @@ app.use(
 app.use(express.json())
 
 //rota inicial / endpoint
-app.post('/person', async (req, res) =>{
-    //req.body
-    const {name, salary, approved} = req.body
+const personRoutes = require('./routes/personRoutes')
 
-    const person = {
-        name,
-        salary,
-        approved
-    }
-    if(!name){
-      res.status(422).json({error: "O nome é obrigatório!"})
-    }
+app.use('/person', personRoutes)
 
-    try {
-
-      await Person.create(person)
-
-      res.status(201).json({message:"Pessoa criada com sucesso!!"})
-      
-    } catch (error) {
-      res.status(500).json({error: error})
-      
-    }
-
-})
-app.get('/', (req, res) => {
-
-    res.json({
-        message:"oi Express!"
-    })
-   // console.log(process.env.USER_MONGODB, `${process.env.USER_PASSWORD}`)
-})
 //entregar um porta
 
 //connect db
