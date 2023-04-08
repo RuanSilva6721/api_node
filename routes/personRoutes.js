@@ -66,12 +66,29 @@ router.patch("/:id", async (req, res) => {
     };
     const person = await Person.updateOne({ _id: id }, personUpdate);
 
-    if (!person) {
+    if (person.matchedCount === 0) {
       res.status(422).json({ error: "Usuário não encontrado!!" });
       return;
     }
 
     res.status(200).json(personUpdate);
+  } catch (error) {
+    res.status(500).json({ error: error });
+  }
+});
+router.delete("/:id", async (req, res) => {
+  const id = req.params.id;
+
+  const person = await Person.findOne({ _id: id });
+  if (!person) {
+    res.status(422).json({ error: "Usuário não encontrado!!" });
+    return;
+  }
+
+  try {
+    const personDelete = await Person.deleteOne({ _id: id });
+
+    res.status(200).json({ message: "usuário deletado com sucesso!" });
   } catch (error) {
     res.status(500).json({ error: error });
   }
